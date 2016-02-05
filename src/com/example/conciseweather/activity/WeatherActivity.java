@@ -1,6 +1,7 @@
 package com.example.conciseweather.activity;
 
 import com.example.conciseweather.R;
+import com.example.conciseweather.service.AutoUpdateService;
 import com.example.conciseweather.util.HttpCallbackListener;
 import com.example.conciseweather.util.HttpUtil;
 import com.example.conciseweather.util.Utility;
@@ -175,6 +176,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDateText.setText(prefs.getString("current_date", ""));
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
-
 }
