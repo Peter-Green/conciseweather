@@ -18,13 +18,12 @@ import com.example.conciseweather.model.County;
 import com.example.conciseweather.model.Province;
 
 public class Utility {
-	
+
 	/**
 	 * 解析和处理服务器返回的省级数据
-	 *
-	 */ 
-	public synchronized static boolean handleProvincesResponse(ConciseWeatherDB conciseWeatherDB, 
-			String response) {
+	 */
+	public synchronized static boolean handleProvincesResponse(
+			ConciseWeatherDB coolWeatherDB, String response) {
 		if (!TextUtils.isEmpty(response)) {
 			String[] allProvinces = response.split(",");
 			if (allProvinces != null && allProvinces.length > 0) {
@@ -33,20 +32,19 @@ public class Utility {
 					Province province = new Province();
 					province.setProvinceCode(array[0]);
 					province.setProvinceName(array[1]);
-					//将解析出来的数据存储到Province表
-					conciseWeatherDB.saveProvince(province);
+					// 将解析出来的数据存储到Province表
+					coolWeatherDB.saveProvince(province);
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 解析和处理服务器返回的市级数据
-	 *
-	 */ 
-	public static boolean handleCitiesResponse(ConciseWeatherDB conciseWeatherDB, 
+	 */
+	public static boolean handleCitiesResponse(ConciseWeatherDB coolWeatherDB,
 			String response, int provinceId) {
 		if (!TextUtils.isEmpty(response)) {
 			String[] allCities = response.split(",");
@@ -57,20 +55,19 @@ public class Utility {
 					city.setCityCode(array[0]);
 					city.setCityName(array[1]);
 					city.setProvinceId(provinceId);
-					//将解析出来的数据存储到City表
-					conciseWeatherDB.saveCity(city);
+					// 将解析出来的数据存储到City表
+					coolWeatherDB.saveCity(city);
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 解析和处理服务器返回的县级数据
-	 *
-	 */ 
-	public static boolean handleCountiesResponse(ConciseWeatherDB conciseWeatherDB, 
+	 */
+	public static boolean handleCountiesResponse(ConciseWeatherDB coolWeatherDB,
 			String response, int cityId) {
 		if (!TextUtils.isEmpty(response)) {
 			String[] allCounties = response.split(",");
@@ -81,19 +78,18 @@ public class Utility {
 					county.setCountyCode(array[0]);
 					county.setCountyName(array[1]);
 					county.setCityId(cityId);
-					//将解析出来的数据存储到County表
-					conciseWeatherDB.saveCounty(county);
+					// 将解析出来的数据存储到County表
+					coolWeatherDB.saveCounty(county);
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
-	 * 解析服务器返回的JSON数据，并将解析出的数据存储到本地
-	 *
-	 */ 
+	 * 解析服务器返回的JSON数据，并将解析出的数据存储到本地。
+	 */
 	public static void handleWeatherResponse(Context context, String response) {
 		try {
 			JSONObject jsonObject = new JSONObject(response);
@@ -104,23 +100,22 @@ public class Utility {
 			String temp2 = weatherInfo.getString("temp2");
 			String weatherDesp = weatherInfo.getString("weather");
 			String publishTime = weatherInfo.getString("ptime");
-			saveWeatherInfo(context, cityName, weatherCode, 
-					temp1, temp2, weatherDesp, publishTime);
+			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2,
+					weatherDesp, publishTime);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * 将服务器返回的所有天气信息存储到SharedPreferences文件中
-	 *
-	 */ 
-	public static void saveWeatherInfo(Context context, String cityName, 
-			String weatherCode, String temp1, String temp2, 
-			String weatherDesp, String publishTime) {
+	 * 将服务器返回的所有天气信息存储到SharedPreferences文件中。
+	 */
+	public static void saveWeatherInfo(Context context, String cityName,
+			String weatherCode, String temp1, String temp2, String weatherDesp,
+			String publishTime) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
-		SharedPreferences.Editor editor = PreferenceManager.
-				getDefaultSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = PreferenceManager
+				.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("weather_code", weatherCode);
@@ -131,4 +126,5 @@ public class Utility {
 		editor.putString("current_date", sdf.format(new Date()));
 		editor.commit();
 	}
+
 }
